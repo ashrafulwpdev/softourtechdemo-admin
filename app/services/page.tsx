@@ -12,6 +12,7 @@ export default async function Services() {
       <Container>
         <h1 className="text-2xl font-bold">Services</h1>
 
+        {/* Create */}
         <Card className="mt-4">
           <h2 className="text-lg font-semibold">Create new</h2>
           <form action={createService} className="mt-3 grid gap-3 md:grid-cols-2">
@@ -27,9 +28,11 @@ export default async function Services() {
           </form>
         </Card>
 
+        {/* List / Edit */}
         <div className="mt-6 grid gap-4">
-          {services.map(s => (
+          {services.map((s) => (
             <Card key={s.id}>
+              {/* EDIT form */}
               <form action={(fd) => updateService(s.id, fd)} className="grid gap-3 md:grid-cols-2">
                 <input name="title" defaultValue={s.title} className="rounded-xl border px-3 py-2" />
                 <input name="iconKey" defaultValue={s.iconKey} className="rounded-xl border px-3 py-2" />
@@ -39,9 +42,12 @@ export default async function Services() {
                 <label className="inline-flex items-center gap-2 text-sm">
                   <input type="checkbox" name="active" defaultChecked={s.active} /> Active
                 </label>
+
                 <div className="flex gap-2 md:col-span-2">
                   <Button type="submit">Save</Button>
-                  <form action={() => deleteService(s.id)}>
+
+                  {/* separate DELETE form (no nesting) */}
+                  <form action={async () => { "use server"; await deleteService(s.id); }}>
                     <Button type="submit" className="bg-red-600 hover:bg-red-500">Delete</Button>
                   </form>
                 </div>
