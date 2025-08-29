@@ -1,65 +1,23 @@
-// app/login/page.tsx
-"use client";
-
-import { signIn } from "next-auth/react";
-import { useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import { Container, Card, Button } from "@/components/ui";
 import { Suspense } from "react";
+import { Container, Card } from "@/components/ui/server";
+import LoginForm from "./LoginForm";
 
-export const dynamic = "force-dynamic"; // avoid static export issues
+export const dynamic = "force-dynamic";
 
-function LoginInner() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const params = useSearchParams();
-  const router = useRouter();
-  const next = params.get("next") || "/dashboard";
-
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    const res = await signIn("credentials", { email, password, redirect: false });
-    if (res?.ok) router.replace(next);
-    else alert("Invalid credentials");
-  }
-
+export default function Page({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
+  const next = typeof searchParams?.next === "string" ? searchParams.next : "/dashboard";
   return (
     <main className="section">
       <Container>
         <div className="mx-auto max-w-md">
           <Card>
             <h1 className="text-2xl font-bold">Admin Login</h1>
-            <form onSubmit={submit} className="mt-4 space-y-3">
-              <div>
-                <label className="text-sm">Email</label>
-                <input
-                  className="mt-1 w-full rounded-xl border px-3 py-2"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="text-sm">Password</label>
-                <input
-                  type="password"
-                  className="mt-1 w-full rounded-xl border px-3 py-2"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <Button type="submit">Sign in</Button>
-            </form>
+            <Suspense fallback={<div className="mt-4 text-sm text-slate-500">Loading…</div>}>
+              <LoginForm next={next} />
+            </Suspense>
           </Card>
         </div>
       </Container>
     </main>
-  );
-}
-
-export default function Login() {
-  return (
-    <Suspense fallback={null}>
-      <LoginInner />
-    </Suspense>
   );
 }

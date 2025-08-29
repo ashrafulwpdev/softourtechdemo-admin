@@ -1,4 +1,3 @@
-// prisma/schema.prisma
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,39 +8,70 @@ datasource db {
 }
 
 model SiteSettings {
+  id            Int      @id @default(1)
+  siteName      String   @default("Softourtech")
+  tagline       String   @default("Build fast. Scale safely.")
+  defaultTitle  String   @default("Softourtech — Premium Websites & Android")
+  defaultDesc   String   @default("Web, Android, and DevOps crafted for speed and SEO.")
+  ogImageURL    String?
+  twitter       String?
+  theme         String   @default("auto")
+  updatedAt     DateTime @updatedAt
+}
+
+model Hero {
   id           Int      @id @default(1)
-  siteName     String   @default("Softourtech")
-  tagline      String   @default("Build fast. Scale safely.")
-  defaultTitle String   @default("Softourtech — Premium Websites & Android")
-  defaultDesc  String   @default("Web, Android, and DevOps crafted for speed and SEO.")
-  ogImageURL   String?
-  twitter      String?
-  theme        String   @default("auto")
+  headline     String   @default("Build fast. Scale safely.")
+  subheadline  String   @default("Next.js & WordPress websites, Android apps, and reliable DevOps.")
+  ctaPrimary   String   @default("Start a project")
+  ctaPrimaryUrl String  @default("/contact")
+  ctaSecondary String   @default("See our work")
+  ctaSecondaryUrl String @default("/work")
   updatedAt    DateTime @updatedAt
 }
 
 model Service {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   title     String
   iconKey   String
   shortDesc String
   bullets   String[]
-  active    Boolean  @default(true)
-  /// display order on the site
-  listOrder Int      @default(0)
-  updatedAt DateTime @updatedAt
+  active    Boolean   @default(true)
+  listOrder Int       @default(0)
+  updatedAt DateTime  @updatedAt
+}
+
+model PricingTier {
+  id        Int       @id @default(autoincrement())
+  name      String
+  priceText String
+  features  String[]
+  popular   Boolean   @default(false)
+  listOrder Int       @default(0)
+  updatedAt DateTime  @updatedAt
+}
+
+model Project {
+  id        Int       @id @default(autoincrement())
+  title     String
+  stack     String
+  summary   String
+  images    String[]
+  featured  Boolean   @default(false)
+  listOrder Int       @default(0)
+  updatedAt DateTime  @updatedAt
 }
 
 model Lead {
-  id        String     @id @default(cuid())
-  name      String
-  email     String
-  message   String
-  sourceUrl String?
-  utmSource String?
-  status    LeadStatus @default(NEW)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id         String     @id @default(cuid())
+  name       String
+  email      String
+  message    String
+  sourceUrl  String?
+  utmSource  String?
+  status     LeadStatus @default(NEW)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 }
 
 enum LeadStatus {

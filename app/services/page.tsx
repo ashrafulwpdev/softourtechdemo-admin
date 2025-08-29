@@ -1,7 +1,9 @@
 import { prisma } from "@/lib/prisma";
-import { Container, Card, Button } from "@/components/ui";
-import { createService, updateService, deleteService } from "./actions";
+import { Container, Card } from "@/components/ui/server";
+import { Button } from "@/components/ui/client";
+import { createServiceAction, updateServiceAction, deleteServiceAction } from "./actions";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export default async function Services() {
@@ -15,7 +17,7 @@ export default async function Services() {
         {/* Create */}
         <Card className="mt-4">
           <h2 className="text-lg font-semibold">Create new</h2>
-          <form action={createService} className="mt-3 grid gap-3 md:grid-cols-2">
+          <form action={createServiceAction} className="mt-3 grid gap-3 md:grid-cols-2">
             <input name="title" placeholder="Title" className="rounded-xl border px-3 py-2" required />
             <input name="iconKey" placeholder="Icon key (e.g., Code2)" className="rounded-xl border px-3 py-2" required />
             <input name="shortDesc" placeholder="Short description" className="rounded-xl border px-3 py-2 md:col-span-2" required />
@@ -30,10 +32,10 @@ export default async function Services() {
 
         {/* List / Edit */}
         <div className="mt-6 grid gap-4">
-          {services.map((s) => (
+          {services.map(s => (
             <Card key={s.id}>
-              {/* EDIT form */}
-              <form action={(fd) => updateService(s.id, fd)} className="grid gap-3 md:grid-cols-2">
+              <form action={updateServiceAction} className="grid gap-3 md:grid-cols-2">
+                <input type="hidden" name="id" defaultValue={String(s.id)} />
                 <input name="title" defaultValue={s.title} className="rounded-xl border px-3 py-2" />
                 <input name="iconKey" defaultValue={s.iconKey} className="rounded-xl border px-3 py-2" />
                 <input name="shortDesc" defaultValue={s.shortDesc} className="rounded-xl border px-3 py-2 md:col-span-2" />
@@ -42,12 +44,10 @@ export default async function Services() {
                 <label className="inline-flex items-center gap-2 text-sm">
                   <input type="checkbox" name="active" defaultChecked={s.active} /> Active
                 </label>
-
                 <div className="flex gap-2 md:col-span-2">
                   <Button type="submit">Save</Button>
-
-                  {/* separate DELETE form (no nesting) */}
-                  <form action={async () => { "use server"; await deleteService(s.id); }}>
+                  <form action={deleteServiceAction}>
+                    <input type="hidden" name="id" value={String(s.id)} />
                     <Button type="submit" className="bg-red-600 hover:bg-red-500">Delete</Button>
                   </form>
                 </div>

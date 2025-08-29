@@ -1,11 +1,11 @@
 import "./globals.css";
-import { Container, ThemeToggle } from "@/components/ui";
 import Link from "next/link";
-import type { Metadata } from "next";
+import { Container } from "@/components/ui/server";
+import { ThemeToggle } from "@/components/ui/client";
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "Softourtech Admin",
-  description: "Admin dashboard for content, leads, and settings."
+  description: "Admin dashboard for content, leads, and settings.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
