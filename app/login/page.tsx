@@ -1,10 +1,15 @@
+// app/login/page.tsx
 "use client";
+
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Container, Card, Button } from "@/components/ui";
+import { Suspense } from "react";
 
-export default function Login() {
+export const dynamic = "force-dynamic"; // avoid static export issues
+
+function LoginInner() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const params = useSearchParams();
@@ -27,11 +32,20 @@ export default function Login() {
             <form onSubmit={submit} className="mt-4 space-y-3">
               <div>
                 <label className="text-sm">Email</label>
-                <input className="mt-1 w-full rounded-xl border px-3 py-2" value={email} onChange={e=>setEmail(e.target.value)} />
+                <input
+                  className="mt-1 w-full rounded-xl border px-3 py-2"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </div>
               <div>
                 <label className="text-sm">Password</label>
-                <input type="password" className="mt-1 w-full rounded-xl border px-3 py-2" value={password} onChange={e=>setPassword(e.target.value)} />
+                <input
+                  type="password"
+                  className="mt-1 w-full rounded-xl border px-3 py-2"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
               </div>
               <Button type="submit">Sign in</Button>
             </form>
@@ -39,5 +53,13 @@ export default function Login() {
         </div>
       </Container>
     </main>
+  );
+}
+
+export default function Login() {
+  return (
+    <Suspense fallback={null}>
+      <LoginInner />
+    </Suspense>
   );
 }
