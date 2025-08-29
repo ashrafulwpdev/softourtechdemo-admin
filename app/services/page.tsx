@@ -26,15 +26,17 @@ export default async function Services() {
             <label className="inline-flex items-center gap-2 text-sm">
               <input type="checkbox" name="active" defaultChecked /> Active
             </label>
-            <div className="md:col-span-2"><Button type="submit">Add Service</Button></div>
+            <div className="md:col-span-2">
+              <Button type="submit">Add Service</Button>
+            </div>
           </form>
         </Card>
 
         {/* List / Edit */}
         <div className="mt-6 grid gap-4">
-          {services.map(s => (
+          {services.map((s) => (
             <Card key={s.id}>
-              <form action={updateServiceAction} className="grid gap-3 md:grid-cols-2">
+              <form className="grid gap-3 md:grid-cols-2">
                 <input type="hidden" name="id" defaultValue={String(s.id)} />
                 <input name="title" defaultValue={s.title} className="rounded-xl border px-3 py-2" />
                 <input name="iconKey" defaultValue={s.iconKey} className="rounded-xl border px-3 py-2" />
@@ -45,11 +47,8 @@ export default async function Services() {
                   <input type="checkbox" name="active" defaultChecked={s.active} /> Active
                 </label>
                 <div className="flex gap-2 md:col-span-2">
-                  <Button type="submit">Save</Button>
-                  <form action={deleteServiceAction}>
-                    <input type="hidden" name="id" value={String(s.id)} />
-                    <Button type="submit" className="bg-red-600 hover:bg-red-500">Delete</Button>
-                  </form>
+                  <Button type="submit" formAction={updateServiceAction}>Save</Button>
+                  <Button type="submit" formAction={deleteServiceAction} className="bg-red-600 hover:bg-red-500">Delete</Button>
                 </div>
               </form>
             </Card>
