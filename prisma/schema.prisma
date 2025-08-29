@@ -1,0 +1,49 @@
+generator client { provider = "prisma-client-js" }
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model SiteSettings {
+  id            Int      @id @default(1)
+  siteName      String   @default("Softourtech")
+  tagline       String   @default("Build fast. Scale safely.")
+  defaultTitle  String   @default("Softourtech — Premium Websites & Android")
+  defaultDesc   String   @default("Web, Android, and DevOps crafted for speed and SEO.")
+  ogImageURL    String?
+  twitter       String?
+  theme         String   @default("auto")
+  updatedAt     DateTime @updatedAt
+}
+
+model Service {
+  id        Int       @id @default(autoincrement())
+  title     String
+  iconKey   String
+  shortDesc String
+  bullets   String[]
+  active    Boolean   @default(true)
+  listOrder Int       @default(0)
+  updatedAt DateTime  @updatedAt
+}
+
+model Lead {
+  id         String    @id @default(cuid())
+  name       String
+  email      String
+  message    String
+  sourceUrl  String?
+  utmSource  String?
+  status     LeadStatus @default(NEW)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  WON
+  LOST
+}
