@@ -6,13 +6,10 @@ const handler = NextAuth({
   providers: [
     Credentials({
       name: "Credentials",
-      credentials: {
-        email: { label: "Email", type: "text" },
-        password: { label: "Password", type: "password" },
-      },
+      credentials: { email: { label: "Email", type: "text" }, password: { label: "Password", type: "password" } },
       async authorize(creds) {
         const email = process.env.ADMIN_EMAIL!;
-        const pass = process.env.ADMIN_PASSWORD!;
+        const pass  = process.env.ADMIN_PASSWORD!;
         if (!creds?.email || !creds?.password) return null;
         if (creds.email.toLowerCase() === email.toLowerCase() && creds.password === pass) {
           return { id: "admin", name: "Admin", email };

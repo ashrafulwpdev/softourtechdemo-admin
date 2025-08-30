@@ -1,8 +1,9 @@
 import { prisma } from "@/lib/prisma";
-import { Container, Card, Button } from "@/components/ui";
+import { Container, Card } from "@/components/ui/server";
+import { SubmitButton } from "@/components/ui/client";
 import { revalidatePath } from "next/cache";
 
-export const revalidate = 0;
+export const dynamic = "force-dynamic";
 
 async function save(formData: FormData) {
   "use server";
@@ -19,7 +20,6 @@ async function save(formData: FormData) {
     create: { id: 1, siteName, tagline, defaultTitle, defaultDesc, ogImageURL, twitter, theme },
     update: { siteName, tagline, defaultTitle, defaultDesc, ogImageURL, twitter, theme }
   });
-
   revalidatePath("/settings");
 }
 
@@ -27,7 +27,7 @@ export default async function Settings() {
   const s = await prisma.siteSettings.findUnique({ where: { id: 1 } });
 
   return (
-    <main className="section">
+    <main className="py-8">
       <Container>
         <h1 className="text-2xl font-bold">Site Settings</h1>
         <Card className="mt-4">
@@ -43,7 +43,7 @@ export default async function Settings() {
               <option value="light">Light</option>
               <option value="dark">Dark</option>
             </select>
-            <div className="md:col-span-2"><Button type="submit">Save</Button></div>
+            <div className="md:col-span-2"><SubmitButton>Save changes</SubmitButton></div>
           </form>
         </Card>
       </Container>
