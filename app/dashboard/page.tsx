@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 import { prisma } from "@/lib/prisma";
 import { Card } from "@/components/ui/Card";
 
@@ -47,7 +49,7 @@ export default async function Dashboard() {
         <Card><div className="text-sm text-[color:var(--text-muted)]">Leads (7d)</div><div className="text-3xl font-bold">{leads7}</div><div className="text-sm mt-1">{percent(leads7, leadsPrev)}</div></Card>
         <Card><div className="text-sm text-[color:var(--text-muted)]">Active Services</div><div className="text-3xl font-bold">{services}</div></Card>
         <Card><div className="text-sm text-[color:var(--text-muted)]">Projects</div><div className="text-3xl font-bold">{projects}</div></Card>
-        <Card><div className="text-sm text-[color:var(--text-muted)]">Conversion %</div><div className="text-3xl font-bold">â€“</div></Card>
+        <Card><div className="text-sm text-[color:var(--text-muted)]">Conversion %</div><div className="text-3xl font-bold">Ã¢â‚¬â€œ</div></Card>
       </div>
 
       <Card>
