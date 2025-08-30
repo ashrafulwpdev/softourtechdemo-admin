@@ -7,16 +7,38 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role { OWNER ADMIN EDITOR VIEWER }
-enum LeadStatus { NEW CONTACTED QUALIFIED WON LOST }
-enum ProjectStatus { DRAFT PUBLISHED LIVE }
-enum PostStatus { DRAFT SCHEDULED PUBLISHED }
+enum Role {
+  OWNER
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  WON
+  LOST
+}
+
+enum ProjectStatus {
+  DRAFT
+  PUBLISHED
+  LIVE
+}
+
+enum PostStatus {
+  DRAFT
+  SCHEDULED
+  PUBLISHED
+}
 
 model User {
-  id        String  @id @default(cuid())
-  email     String  @unique
+  id        String   @id @default(cuid())
+  email     String   @unique
   name      String?
-  role      Role    @default(EDITOR)
+  role      Role     @default(EDITOR)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -34,21 +56,21 @@ model SiteSettings {
 }
 
 model TechBadge {
-  id     Int     @id @default(autoincrement())
-  key    String  @unique
-  label  String
-  icon   String?
+  id    Int     @id @default(autoincrement())
+  key   String  @unique
+  label String
+  icon  String?
 }
 
 model Service {
-  id        Int      @id @default(autoincrement())
+  id        Int          @id @default(autoincrement())
   title     String
   iconKey   String
   shortDesc String
   bullets   String[]
-  active    Boolean  @default(true)
-  order     Int      @default(0)
-  updatedAt DateTime @updatedAt
+  active    Boolean      @default(true)
+  order     Int          @default(0)
+  updatedAt DateTime     @updatedAt
   plans     ServicePlan[]
 }
 
@@ -65,40 +87,40 @@ model ServicePlan {
 }
 
 model Project {
-  id           Int            @id @default(autoincrement())
-  title        String
-  slug         String         @unique
-  summary      String
-  images       String[]
-  tags         String[]
-  status       ProjectStatus  @default(DRAFT)
-  publicUrl    String?
-  seoTitle     String?
+  id             Int            @id @default(autoincrement())
+  title          String
+  slug           String         @unique
+  summary        String
+  images         String[]
+  tags           String[]
+  status         ProjectStatus  @default(DRAFT)
+  publicUrl      String?
+  seoTitle       String?
   seoDescription String?
-  scheduledAt  DateTime?
-  publishedAt  DateTime?
-  updatedAt    DateTime       @updatedAt
+  scheduledAt    DateTime?
+  publishedAt    DateTime?
+  updatedAt      DateTime       @updatedAt
 }
 
 model Lead {
-  id         String     @id @default(cuid())
-  name       String
-  email      String
-  message    String
+  id          String      @id @default(cuid())
+  name        String
+  email       String
+  message     String
   serviceHint String?
-  sourceUrl  String?
-  utmSource  String?
-  status     LeadStatus  @default(NEW)
-  assignedTo String?
-  tags       String[]
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  notes      LeadNote[]
+  sourceUrl   String?
+  utmSource   String?
+  status      LeadStatus  @default(NEW)
+  assignedTo  String?
+  tags        String[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  notes       LeadNote[]
 }
 
 model LeadNote {
-  id        Int     @id @default(autoincrement())
-  lead      Lead    @relation(fields: [leadId], references: [id])
+  id        Int      @id @default(autoincrement())
+  lead      Lead     @relation(fields: [leadId], references: [id])
   leadId    String
   authorId  String?
   body      String
@@ -117,35 +139,38 @@ model EmailTemplate {
 }
 
 model BlogCategory {
-  id    Int    @id @default(autoincrement())
+  id    Int        @id @default(autoincrement())
   name  String
-  slug  String @unique
+  slug  String     @unique
+  posts BlogPost[] // back-relation for m-n
 }
+
 model BlogTag {
-  id    Int    @id @default(autoincrement())
+  id    Int        @id @default(autoincrement())
   name  String
-  slug  String @unique
+  slug  String     @unique
+  posts BlogPost[] // back-relation for m-n
 }
 
 model BlogPost {
-  id            Int        @id @default(autoincrement())
-  title         String
-  slug          String     @unique
-  excerpt       String?
-  content       String
-  cover         String?
-  authorId      String?
-  categories    BlogCategory[]
-  tags          BlogTag[]
-  status        PostStatus @default(DRAFT)
-  scheduledAt   DateTime?
-  publishedAt   DateTime?
-  seoTitle      String?
+  id             Int           @id @default(autoincrement())
+  title          String
+  slug           String        @unique
+  excerpt        String?
+  content        String
+  cover          String?
+  authorId       String?
+  categories     BlogCategory[] // implicit m-n
+  tags           BlogTag[]      // implicit m-n
+  status         PostStatus     @default(DRAFT)
+  scheduledAt    DateTime?
+  publishedAt    DateTime?
+  seoTitle       String?
   seoDescription String?
-  canonicalUrl  String?
-  ogImage       String?
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  canonicalUrl   String?
+  ogImage        String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 }
 
 model AuditLog {
@@ -154,7 +179,7 @@ model AuditLog {
   action    String
   entity    String
   diff      Json?
-  createdAt DateTime  @default(now())
+  createdAt DateTime @default(now())
 }
 
 model SystemLog {
@@ -167,7 +192,7 @@ model SystemLog {
 }
 
 model Idempotency {
-  key       String  @id
+  key       String   @id
   actorId   String?
   scope     String?
   createdAt DateTime @default(now())
