@@ -1,4 +1,4 @@
-# Softourtech Admin — Full Build (MVP functional)
+# Softourtech Admin -- Full Build (MVP functional)
 
 **What works now**
 - Next.js 14 App Router + Tailwind tokens (dark/light)
