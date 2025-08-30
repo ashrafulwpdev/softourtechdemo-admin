@@ -2,8 +2,12 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
 const handler = NextAuth({
-  session: { strategy: "jwt" },
-  pages: { signIn: "/login" },
+  session: {
+    strategy: "jwt", // Use JWT for stateless session management
+  },
+  pages: {
+    signIn: "/login", // Redirect unauthenticated users to the /login page
+  },
   providers: [
     Credentials({
       name: "Credentials",
@@ -12,11 +16,20 @@ const handler = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        // Simple example: Accept any credentials as valid
         if (!credentials?.email || !credentials.password) {
           return null;
         }
-        // Simple preview only: accept any credentials
-        return { id: "preview-user", email: credentials.email, name: "Preview User" };
+
+        // Example: Replace this with your actual authentication logic
+        const user = { id: "preview-user", email: credentials.email, name: "Preview User" };
+
+        if (user) {
+          return user; // If credentials are valid, return the user object
+        }
+
+        // If credentials are invalid, return null
+        return null;
       },
     }),
   ],

@@ -1,4 +1,3 @@
-// app/dashboard/page.tsx
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
@@ -15,15 +14,13 @@ function percent(a: number, b: number) {
 }
 
 export default async function Dashboard() {
-  // ✅ hard auth-guard: unauthenticated users go to /login (no 404)
   const session = await getServerSession();
-  if (!session) redirect("/login");
+  if (!session) redirect("/login"); // Redirect to login if not authenticated
 
   const now = new Date();
   const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
   const twoWeeksAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
 
-  // ✅ don’t let DB hiccups crash the route
   let leads7 = 0, leadsPrev = 0, services = 0, projects = 0;
   let statusData: Array<{ label: string; value: number }> = [];
   let weekly: Array<{ label: string; value: number }> = [];
@@ -83,7 +80,6 @@ export default async function Dashboard() {
         </Card>
         <Card>
           <div className="text-sm text-[color:var(--text-muted)]">Conversion %</div>
-          {/* ASCII hyphen – avoids mojibake */}
           <div className="text-3xl font-bold">-</div>
         </Card>
       </div>
