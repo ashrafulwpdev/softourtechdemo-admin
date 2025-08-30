@@ -1,14 +1,13 @@
 import { withAuth } from "next-auth/middleware";
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 export default withAuth({
-  pages: { signIn: "/login" },
-  async redirect({ url, baseUrl }) {
-    // Ensure the redirect happens only to valid URLs
-    if (url.startsWith(baseUrl)) {
-      return NextResponse.redirect(url);
-    }
-    return NextResponse.redirect(baseUrl);
+  pages: {
+    signIn: "/login", // Sign in page
+  },
+  async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
+    // Custom redirect logic after login
+    return NextResponse.redirect(url.startsWith(baseUrl) ? url : baseUrl);
   },
 });
 
