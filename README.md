@@ -1,30 +1,27 @@
-# Softourtech Admin (Vercel-ready)
+# Softourtech Admin — Premium Skeleton (Blueprint-Ready)
 
-A professional admin for managing **Services**, **Leads**, and **Site Settings**.
+This repo is a **clean replacement** starter aligned to your blueprint (desktop/tablet/mobile, dark/light, Blog-ready). It compiles to a premium shell you can extend with real data and server actions.
 
-## Features
-- Next.js 14 (App Router) + Tailwind (dark/light)
-- NextAuth (Credentials) + middleware route protection
-- Prisma + Postgres (Neon/Supabase)
-- Dashboard KPIs + Recharts line chart
-- Services CRUD via Server Actions
-- Leads list (with public POST API)
-- Settings (site name, tagline, default meta, theme)
-
-## Deploy on Vercel
-1. Push to GitHub and import the repo in Vercel.
-2. Set **Environment Variables**:
-   - `DATABASE_URL` (Postgres; include `?sslmode=require`)
-   - `NEXTAUTH_SECRET` (long random string)
-   - `NEXTAUTH_URL` = your Vercel URL (or custom domain later)
-   - `ADMIN_EMAIL`, `ADMIN_PASSWORD`
-3. Build command (already in package.json): `prisma db push && next build`
-4. Open `/login` and sign in.
-
-## Local Dev
+## Quick start
 ```bash
-npm install
-cp .env.example .env   # fill in values
-npx prisma db push
-npm run dev
+pnpm i   # or npm i / yarn
+cp .env.example .env
+# Set DATABASE_URL etc, then:
+npx prisma generate
+pnpm dev
 ```
+
+## Highlights
+- Next.js 14 (App Router), Tailwind tokens (AA), dark/light theme
+- Sidebar (collapsible), Topbar (search/new/notifications/avatar/logout), container width 1280
+- Dashboard KPIs + chart shells + activity/system status
+- Pages: Projects, Leads, Services, Pricing, Blog, Settings
+- Prisma schema for Admin + Blog (native) with extras (ServicePlan, LeadNote, AuditLog, SystemLog, Idempotency)
+- API stubs: revalidate, email test
+- Tokens: see `app/globals.css`, config in `tailwind.config.ts`
+
+## Next steps
+- Fill each module page with real UI per the spec (drawers, tables, kanban, editors).
+- Add Server Actions and REST routes where needed.
+- Wire revalidation and public site RO DB user.
+- Add ToastProvider, Command Palette, and form validation patterns.

@@ -2,9 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
-:root { color-scheme: light dark; }
-html, body { min-height: 100%; }
-.container-xl { @apply mx-auto w-full max-w-6xl px-4 md:px-8; }
-.card { @apply rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-slate-900 p-6; }
-.section { @apply py-8 md:py-10; }
-a { @apply no-underline; }
+:root {
+  --bg:#F8FAFC; --surface:#FFFFFF; --surface-2:#F1F5F9; --border:rgba(2,6,23,.08);
+  --text:#0F172A; --text-muted:#6B7280;
+  --primary:#2563EB;
+  --success:#10B981; --warning:#F59E0B; --danger:#EF4444;
+}
+:root.dark {
+  --bg:#0F172A; --surface:#0B1220; --surface-2:#0E1526; --border:rgba(148,163,184,.14);
+  --text:#E5E7EB; --text-muted:#94A3B8;
+  --primary:#60A5FA;
+  --success:#34D399; --warning:#FBBF24; --danger:#F87171;
+}
+html, body { height: 100%; background: var(--bg); color: var(--text); }
+.container-xl { @apply mx-auto w-full max-w-[1280px] px-4 md:px-6; }
+.card { @apply rounded-2xl border bg-[var(--surface)] border-[var(--border)] p-5 shadow-cardLight dark:shadow-cardDark; }
+.btn { @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-60 disabled:cursor-not-allowed; }
+.btn-primary { @apply bg-[var(--primary)] text-white; }
+.btn-ghost { @apply border border-[var(--border)] bg-[color:var(--surface-2)]; }
+.input { @apply w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2; }
+.label { @apply text-sm text-textmuted; }
+.badge { @apply inline-flex items-center rounded-full border border-[var(--border)] px-2 py-0.5 text-xs; }
+hr.sep { border-color: var(--border); }
+.toast { @apply rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-3 shadow-cardLight; }
+.kpi { @apply card; }
+.kpi-title { @apply text-sm text-textmuted; }
+.kpi-value { @apply mt-1 text-3xl font-semibold; }
+.kpi-delta { @apply ml-2 text-xs rounded-md px-1.5 py-0.5; }
+.table { @apply w-full border-collapse; }
+.table th, .table td { @apply border-b border-[var(--border)] text-sm py-3 text-left; }
+.skeleton { @apply animate-pulse bg-[color:var(--surface-2)] rounded; }

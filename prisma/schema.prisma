@@ -7,59 +7,77 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model SiteSettings {
-  id            Int      @id @default(1)
-  siteName      String   @default("Softourtech")
-  tagline       String   @default("Build fast. Scale safely.")
-  defaultTitle  String   @default("Softourtech — Premium Websites & Android")
-  defaultDesc   String   @default("Web, Android, and DevOps crafted for speed and SEO.")
-  ogImageURL    String?
-  twitter       String?
-  theme         String   @default("auto")
-  updatedAt     DateTime @updatedAt
+enum Role { OWNER ADMIN EDITOR VIEWER }
+enum LeadStatus { NEW CONTACTED QUALIFIED WON LOST }
+enum ProjectStatus { DRAFT PUBLISHED LIVE }
+enum PostStatus { DRAFT SCHEDULED PUBLISHED }
+
+model User {
+  id        String  @id @default(cuid())
+  email     String  @unique
+  name      String?
+  role      Role    @default(EDITOR)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-model Hero {
+model SiteSettings {
   id           Int      @id @default(1)
-  headline     String   @default("Build fast. Scale safely.")
-  subheadline  String   @default("Next.js & WordPress websites, Android apps, and reliable DevOps.")
-  ctaPrimary   String   @default("Start a project")
-  ctaPrimaryUrl String  @default("/contact")
-  ctaSecondary String   @default("See our work")
-  ctaSecondaryUrl String @default("/work")
+  siteName     String   @default("Softourtech")
+  tagline      String   @default("Build fast. Scale safely.")
+  defaultTitle String   @default("Softourtech — Premium Websites & Android")
+  defaultDesc  String   @default("Web, Android, and DevOps crafted for speed and SEO.")
+  ogImageURL   String?
+  twitter      String?
+  theme        String   @default("auto")
   updatedAt    DateTime @updatedAt
 }
 
+model TechBadge {
+  id     Int     @id @default(autoincrement())
+  key    String  @unique
+  label  String
+  icon   String?
+}
+
 model Service {
-  id        Int       @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   title     String
   iconKey   String
   shortDesc String
   bullets   String[]
-  active    Boolean   @default(true)
-  listOrder Int       @default(0)
-  updatedAt DateTime  @updatedAt
+  active    Boolean  @default(true)
+  order     Int      @default(0)
+  updatedAt DateTime @updatedAt
+  plans     ServicePlan[]
 }
 
-model PricingTier {
-  id        Int       @id @default(autoincrement())
+model ServicePlan {
+  id        Int     @id @default(autoincrement())
+  service   Service @relation(fields: [serviceId], references: [id])
+  serviceId Int
   name      String
+  currency  String  @default("USD")
   priceText String
   features  String[]
-  popular   Boolean   @default(false)
-  listOrder Int       @default(0)
-  updatedAt DateTime  @updatedAt
+  popular   Boolean @default(false)
+  order     Int     @default(0)
 }
 
 model Project {
-  id        Int       @id @default(autoincrement())
-  title     String
-  stack     String
-  summary   String
-  images    String[]
-  featured  Boolean   @default(false)
-  listOrder Int       @default(0)
-  updatedAt DateTime  @updatedAt
+  id           Int            @id @default(autoincrement())
+  title        String
+  slug         String         @unique
+  summary      String
+  images       String[]
+  tags         String[]
+  status       ProjectStatus  @default(DRAFT)
+  publicUrl    String?
+  seoTitle     String?
+  seoDescription String?
+  scheduledAt  DateTime?
+  publishedAt  DateTime?
+  updatedAt    DateTime       @updatedAt
 }
 
 model Lead {
@@ -67,17 +85,90 @@ model Lead {
   name       String
   email      String
   message    String
+  serviceHint String?
   sourceUrl  String?
   utmSource  String?
-  status     LeadStatus @default(NEW)
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  status     LeadStatus  @default(NEW)
+  assignedTo String?
+  tags       String[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  notes      LeadNote[]
 }
 
-enum LeadStatus {
-  NEW
-  CONTACTED
-  QUALIFIED
-  WON
-  LOST
+model LeadNote {
+  id        Int     @id @default(autoincrement())
+  lead      Lead    @relation(fields: [leadId], references: [id])
+  leadId    String
+  authorId  String?
+  body      String
+  mentions  String[]
+  createdAt DateTime @default(now())
+}
+
+model EmailTemplate {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  slug      String   @unique
+  subject   String
+  htmlBody  String
+  textBody  String?
+  updatedAt DateTime @updatedAt
+}
+
+model BlogCategory {
+  id    Int    @id @default(autoincrement())
+  name  String
+  slug  String @unique
+}
+model BlogTag {
+  id    Int    @id @default(autoincrement())
+  name  String
+  slug  String @unique
+}
+
+model BlogPost {
+  id            Int        @id @default(autoincrement())
+  title         String
+  slug          String     @unique
+  excerpt       String?
+  content       String
+  cover         String?
+  authorId      String?
+  categories    BlogCategory[]
+  tags          BlogTag[]
+  status        PostStatus @default(DRAFT)
+  scheduledAt   DateTime?
+  publishedAt   DateTime?
+  seoTitle      String?
+  seoDescription String?
+  canonicalUrl  String?
+  ogImage       String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  action    String
+  entity    String
+  diff      Json?
+  createdAt DateTime  @default(now())
+}
+
+model SystemLog {
+  id        String   @id @default(cuid())
+  scope     String
+  message   String
+  meta      Json?
+  level     String   @default("info")
+  createdAt DateTime @default(now())
+}
+
+model Idempotency {
+  key       String  @id
+  actorId   String?
+  scope     String?
+  createdAt DateTime @default(now())
 }

@@ -1,3 +1,5 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = { reactStrictMode: true };
+const nextConfig = {
+  experimental: { serverActions: { bodySizeLimit: '2mb' } }
+};
 export default nextConfig;
