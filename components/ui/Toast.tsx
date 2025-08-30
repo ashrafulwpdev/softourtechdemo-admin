@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 import React from 'react'
 type Toast = { id: string, kind: 'success'|'error'|'info'|'warning'|'undo'|'progress', message: string, actionLabel?: string, onAction?: ()=>void }
 export const ToastContext = React.createContext<{ push: (t: Omit<Toast,'id'>)=>void }>({ push: ()=>{} })

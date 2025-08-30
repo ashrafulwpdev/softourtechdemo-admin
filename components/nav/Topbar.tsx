@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import ThemeToggle from "./ThemeToggle";
 import { Button } from "@/components/ui/Button";
 import { useRouter } from "next/navigation";

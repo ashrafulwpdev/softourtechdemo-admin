@@ -1,4 +1,4 @@
-﻿import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { Card } from "@/components/ui/Card";
 
 function percent(a: number, b: number) {

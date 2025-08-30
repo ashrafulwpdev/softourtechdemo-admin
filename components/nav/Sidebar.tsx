@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BarChart2, Briefcase, CircleDollarSign, Cog, FileText, Home, Layers, MessagesSquare } from "lucide-react";

@@ -1,4 +1,4 @@
-﻿export async function callPublicRevalidate(paths: string[]) {
+export async function callPublicRevalidate(paths: string[]) {
   const url = process.env.PUBLIC_REVALIDATE_URL
   const token = process.env.REVALIDATE_TOKEN
   if (!url || !token) return
