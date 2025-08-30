@@ -56,10 +56,10 @@ model SiteSettings {
 }
 
 model TechBadge {
-  id    Int     @id @default(autoincrement())
-  key   String  @unique
-  label String
-  icon  String?
+  id     Int     @id @default(autoincrement())
+  key    String  @unique
+  label  String
+  icon   String?
 }
 
 model Service {
@@ -139,38 +139,38 @@ model EmailTemplate {
 }
 
 model BlogCategory {
-  id    Int        @id @default(autoincrement())
+  id    Int    @id @default(autoincrement())
   name  String
-  slug  String     @unique
+  slug  String @unique
   posts BlogPost[]
 }
 
 model BlogTag {
-  id    Int        @id @default(autoincrement())
+  id    Int    @id @default(autoincrement())
   name  String
-  slug  String     @unique
+  slug  String @unique
   posts BlogPost[]
 }
 
 model BlogPost {
-  id             Int           @id @default(autoincrement())
+  id             Int        @id @default(autoincrement())
   title          String
-  slug           String        @unique
+  slug           String     @unique
   excerpt        String?
   content        String
   cover          String?
   authorId       String?
   categories     BlogCategory[]
   tags           BlogTag[]
-  status         PostStatus     @default(DRAFT)
+  status         PostStatus @default(DRAFT)
   scheduledAt    DateTime?
   publishedAt    DateTime?
   seoTitle       String?
   seoDescription String?
   canonicalUrl   String?
   ogImage        String?
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
 }
 
 model AuditLog {
@@ -192,7 +192,7 @@ model SystemLog {
 }
 
 model Idempotency {
-  key       String   @id
+  key       String  @id
   actorId   String?
   scope     String?
   createdAt DateTime @default(now())
