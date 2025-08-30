@@ -2,9 +2,8 @@
 
 import React from "react";
 import { Moon, Sun, Menu } from "lucide-react";
-import { experimental_useFormStatus as useFormStatus } from "react-dom";
+import { useFormStatus } from "react-dom";
 
-// Generic button
 export function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   const { className = "", children, ...rest } = props;
   return (
@@ -17,14 +16,7 @@ export function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   );
 }
 
-// Submit button with loading state
-export function SubmitButton({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
+export function SubmitButton({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   const { pending } = useFormStatus();
   return (
     <button
@@ -37,7 +29,6 @@ export function SubmitButton({
   );
 }
 
-// Light / dark theme toggle
 export function ThemeToggle() {
   const [mounted, setMounted] = React.useState(false);
   const [dark, setDark] = React.useState(false);
@@ -61,32 +52,20 @@ export function ThemeToggle() {
   };
 
   return (
-    <button
-      onClick={toggle}
-      className="rounded-xl border border-black/10 dark:border-white/10 px-3 py-2 text-sm"
-    >
-      {dark ? (
-        <Sun className="inline h-4 w-4" />
-      ) : (
-        <Moon className="inline h-4 w-4" />
-      )}{" "}
+    <button onClick={toggle} className="rounded-xl border border-black/10 dark:border-white/10 px-3 py-2 text-sm">
+      {dark ? <Sun className="inline h-4 w-4" /> : <Moon className="inline h-4 w-4" />}{" "}
       <span className="ml-1">{dark ? "Light" : "Dark"}</span>
     </button>
   );
 }
 
-// Sidebar toggle (mobile)
 export function SidebarToggle() {
   const [open, setOpen] = React.useState(false);
   React.useEffect(() => {
     document.body.toggleAttribute("data-sidebar-open", open);
   }, [open]);
-
   return (
-    <button
-      onClick={() => setOpen((o) => !o)}
-      className="md:hidden rounded-xl border px-3 py-2"
-    >
+    <button onClick={() => setOpen((o) => !o)} className="md:hidden rounded-xl border px-3 py-2">
       <Menu className="h-4 w-4" />
     </button>
   );
