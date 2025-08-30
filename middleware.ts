@@ -1,5 +1,17 @@
-export { default } from "next-auth/middleware";
+import { withAuth } from "next-auth/middleware";
+
+export default withAuth({
+  pages: { signIn: "/login" }, // ← use our login
+});
 
 export const config = {
-  matcher: ["/((?!api/auth|login|_next/static|_next/image|favicon.ico|public).*)"],
+  matcher: [
+    "/dashboard/:path*",
+    "/projects/:path*",
+    "/services/:path*",
+    "/leads/:path*",
+    "/pricing/:path*",
+    "/blog/:path*",
+    "/settings/:path*",
+  ],
 };
