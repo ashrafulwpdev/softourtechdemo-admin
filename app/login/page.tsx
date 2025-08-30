@@ -1,23 +1,42 @@
-import { Suspense } from "react";
-import { Container, Card } from "@/components/ui/server";
-import LoginForm from "./LoginForm";
+"use client";
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Button } from "@/components/ui/Button";
 
-export const dynamic = "force-dynamic";
+export default function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const router = useRouter();
+  const params = useSearchParams();
+  const next = params.get("next") || "/dashboard";
 
-export default function Page({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
-  const next = typeof searchParams?.next === "string" ? searchParams.next : "/dashboard";
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true); setErr(null);
+    const res = await signIn("credentials", { email, password, redirect: false, callbackUrl: next });
+    setLoading(false);
+    if (res?.ok) router.replace(next);
+    else setErr("Invalid email or password.");
+  }
+
   return (
-    <main className="section">
-      <Container>
-        <div className="mx-auto max-w-md">
-          <Card>
-            <h1 className="text-2xl font-bold">Admin Login</h1>
-            <Suspense fallback={<div className="mt-4 text-sm text-slate-500">Loading…</div>}>
-              <LoginForm next={next} />
-            </Suspense>
-          </Card>
+    <div className="min-h-screen flex items-center justify-center">
+      <form onSubmit={submit} className="card w-full max-w-md">
+        <h1 className="text-2xl font-bold">Sign in</h1>
+        {err && <div className="banner banner-err mt-3">{err}</div>}
+        <div className="mt-4">
+          <label className="label">Email</label>
+          <input className="input mt-1" value={email} onChange={e=>setEmail(e.target.value)} required />
         </div>
-      </Container>
-    </main>
+        <div className="mt-3">
+          <label className="label">Password</label>
+          <input type="password" className="input mt-1" value={password} onChange={e=>setPassword(e.target.value)} required />
+        </div>
+        <Button type="submit" className="mt-4" loading={loading}>Sign in</Button>
+      </form>
+    </div>
   );
 }

@@ -1,36 +1,44 @@
-'use client'
-import Link from 'next/link'
-import { useState } from 'react'
-import { LayoutDashboard, Folder, Users, Settings, Tags, Newspaper } from 'lucide-react'
-import { clsx } from 'clsx'
+"use client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { BarChart2, Briefcase, CircleDollarSign, Cog, FileText, Home, Layers, MessagesSquare } from "lucide-react";
+import React from "react";
+import { cn } from "@/lib/utils";
 
 const items = [
-  { href:'/dashboard', label:'Dashboard', icon: LayoutDashboard },
-  { href:'/projects', label:'Projects', icon: Folder },
-  { href:'/leads', label:'Leads', icon: Users },
-  { href:'/services', label:'Services', icon: Tags },
-  { href:'/pricing', label:'Pricing', icon: Tags },
-  { href:'/blog', label:'Blog', icon: Newspaper },
-  { href:'/settings', label:'Settings', icon: Settings },
-]
+  { href: "/dashboard", label: "Dashboard", icon: Home },
+  { href: "/projects", label: "Projects", icon: Briefcase },
+  { href: "/leads", label: "Leads", icon: MessagesSquare },
+  { href: "/services", label: "Services", icon: Layers },
+  { href: "/pricing", label: "Pricing", icon: CircleDollarSign },
+  { href: "/blog", label: "Blog", icon: FileText },
+  { href: "/settings", label: "Settings", icon: Cog },
+];
 
-export default function Sidebar(){
-  const [collapsed, setCollapsed] = useState(false)
+export default function Sidebar() {
+  const pathname = usePathname();
+  const [collapsed, setCollapsed] = React.useState(false);
   return (
-    <aside className={clsx('border-r border-[var(--border)] bg-[var(--surface)] transition-all', collapsed?'w-[72px]':'w-[240px]')}>
-      <div className="flex items-center justify-between p-3">
-        <span className="font-semibold">{collapsed?'ST':'Softourtech'}</span>
-        <button className="btn btn-ghost px-2 py-1" onClick={()=>setCollapsed(!collapsed)}>{collapsed?'>':'<'}</button>
+    <aside className="sidebar w-60">
+      <div className="flex items-center justify-between px-4 py-3">
+        <span className="font-bold">Softourtech Admin</span>
+        <button onClick={() => setCollapsed(!collapsed)} className="text-sm text-[color:var(--text-muted)]">▮▮</button>
       </div>
-      <nav className="flex flex-col gap-1 p-2">
-        {items.map((it)=>(
-          <Link href={it.href} key={it.href} className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-[var(--surface-2)]">
-            <it.icon size={20} />
-            {!collapsed && <span>{it.label}</span>}
-          </Link>
-        ))}
+      <nav className={cn("px-2", collapsed && "hidden md:block")}>
+        {items.map((it) => {
+          const Icon = it.icon;
+          const active = pathname.startsWith(it.href);
+          return (
+            <Link key={it.href} href={it.href} className={cn(
+              "flex items-center gap-3 px-3 py-2 rounded-lg mb-1",
+              active ? "bg-[color:var(--surface-2)] font-semibold" : "hover:bg-[color:var(--surface-2)]"
+            )}>
+              <Icon className="h-4 w-4" />
+              <span>{it.label}</span>
+            </Link>
+          );
+        })}
       </nav>
-      <div className="mt-auto p-2 text-xs text-[var(--text-muted)]">{!collapsed && '© Softourtech'}</div>
     </aside>
-  )
+  );
 }

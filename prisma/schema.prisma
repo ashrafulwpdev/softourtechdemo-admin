@@ -142,14 +142,14 @@ model BlogCategory {
   id    Int        @id @default(autoincrement())
   name  String
   slug  String     @unique
-  posts BlogPost[] // back-relation for m-n
+  posts BlogPost[]
 }
 
 model BlogTag {
   id    Int        @id @default(autoincrement())
   name  String
   slug  String     @unique
-  posts BlogPost[] // back-relation for m-n
+  posts BlogPost[]
 }
 
 model BlogPost {
@@ -160,8 +160,8 @@ model BlogPost {
   content        String
   cover          String?
   authorId       String?
-  categories     BlogCategory[] // implicit m-n
-  tags           BlogTag[]      // implicit m-n
+  categories     BlogCategory[]
+  tags           BlogTag[]
   status         PostStatus     @default(DRAFT)
   scheduledAt    DateTime?
   publishedAt    DateTime?
