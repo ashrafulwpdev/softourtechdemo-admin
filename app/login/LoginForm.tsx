@@ -1,7 +1,7 @@
 "use client";
 
+import React, { useState, useTransition, useEffect, useRef } from "react";
 import { signIn } from "next-auth/react";
-import { useState, useTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/client";
 
@@ -11,7 +11,7 @@ export default function LoginForm({ next }: { next?: string }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-  const emailRef = React.useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
 
   // Focus email input if there is an error
   useEffect(() => {
