@@ -3,12 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export default withAuth({
   pages: {
-    signIn: "/login", // Sign in page
+    signIn: "/login", // Redirect to the login page if the user is not authenticated
   },
-  async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
-    // Custom redirect logic after login
-    return NextResponse.redirect(url.startsWith(baseUrl) ? url : baseUrl);
-  },
+  // No need for custom redirect handling here; just use the default
 });
 
 export const config = {
