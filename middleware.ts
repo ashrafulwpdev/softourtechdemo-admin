@@ -1,23 +1,11 @@
 import { withAuth } from "next-auth/middleware";
-import { NextRequest, NextResponse } from "next/server";
 
-// Define middleware for protecting specific routes
+// Protect specific routes
 export default withAuth({
-  pages: {
-    signIn: "/login", // Redirect to the login page if the user is not authenticated
-  },
-  // Use this to protect routes
-  matcher: [
-    "/dashboard/:path*",
-    "/projects/:path*",
-    "/services/:path*",
-    "/leads/:path*",
-    "/pricing/:path*",
-    "/blog/:path*",
-    "/settings/:path*",
-  ],
+  // Middleware will automatically handle redirection to the sign-in page for unauthenticated users
 });
 
+// The matcher is where you define the paths you want to protect with authentication.
 export const config = {
   matcher: [
     "/dashboard/:path*",
