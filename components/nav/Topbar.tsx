@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import ThemeToggle from "./ThemeToggle";
 import { Button } from "@/components/ui/Button";
 import { useRouter } from "next/navigation";
@@ -12,7 +12,7 @@ export default function Topbar() {
       <div className="container-xl flex items-center justify-between py-3">
         <div className="text-sm text-[color:var(--text-muted)]">Dashboard</div>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" onClick={() => router.push('/command')}>⌘K</Button>
+          <Button variant="ghost" onClick={() => router.push('/command')}>âŒ˜K</Button>
           <ThemeToggle />
           <Button variant="ghost" onClick={() => signOut({ callbackUrl: '/login' })}>Logout</Button>
         </div>

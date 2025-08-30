@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BarChart2, Briefcase, CircleDollarSign, Cog, FileText, Home, Layers, MessagesSquare } from "lucide-react";
@@ -22,7 +22,7 @@ export default function Sidebar() {
     <aside className="sidebar w-60">
       <div className="flex items-center justify-between px-4 py-3">
         <span className="font-bold">Softourtech Admin</span>
-        <button onClick={() => setCollapsed(!collapsed)} className="text-sm text-[color:var(--text-muted)]">▮▮</button>
+        <button onClick={() => setCollapsed(!collapsed)} className="text-sm text-[color:var(--text-muted)]">â–®â–®</button>
       </div>
       <nav className={cn("px-2", collapsed && "hidden md:block")}>
         {items.map((it) => {

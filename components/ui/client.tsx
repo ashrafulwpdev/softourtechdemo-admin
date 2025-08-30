@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { Moon, Sun, Menu } from "lucide-react";
-import { useFormStatus } from "react-dom"; // ✅ stable hook
+import { useFormStatus } from "react-dom"; // âœ… stable hook
 
 // Tiny inline spinner
 function Spinner() {
@@ -61,7 +61,7 @@ export function SubmitButton({
       {pending ? (
         <>
           <Spinner />
-          Saving…
+          Savingâ€¦
         </>
       ) : (
         children

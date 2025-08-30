@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from "recharts";
 
 export default function ChartLine({ data }: { data: { label: string; value: number }[] }) {

@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "@resend/resend";
+﻿import { NextRequest, NextResponse } from "next/server";
+import { Resend } from "resend";
 
 export async function POST(req: NextRequest) {
   const { to, subject = "Softourtech Test", html = "<p>Test OK</p>" } = await req.json();

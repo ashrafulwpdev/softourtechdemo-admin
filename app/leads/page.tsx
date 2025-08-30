@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+﻿import { prisma } from "@/lib/prisma";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import * as A from "./actions";
@@ -30,7 +30,7 @@ export default async function Leads() {
             <div className="grid md:grid-cols-4 gap-3">
               <div><div className="text-sm text-[color:var(--text-muted)]">Name</div><div className="font-semibold">{l.name}</div></div>
               <div><div className="text-sm text-[color:var(--text-muted)]">Email</div><div>{l.email}</div></div>
-              <div><div className="text-sm text-[color:var(--text-muted)]">Service</div><div>{l.serviceHint || "—"}</div></div>
+              <div><div className="text-sm text-[color:var(--text-muted)]">Service</div><div>{l.serviceHint || "â€”"}</div></div>
               <form action={statusAction.bind(null, l.id)} className="flex items-end gap-2">
                 <div className="flex-1">
                   <label className="label">Status</label>
@@ -46,7 +46,7 @@ export default async function Leads() {
                 <form action={deleteAction.bind(null, l.id)}><Button variant="danger">Delete</Button></form>
               </form>
             </div>
-            {l.message ? <div className="mt-2 text-sm text-[color:var(--text-muted)]">“{l.message}”</div> : null}
+            {l.message ? <div className="mt-2 text-sm text-[color:var(--text-muted)]">â€œ{l.message}â€</div> : null}
           </Card>
         ))}
       </div>
