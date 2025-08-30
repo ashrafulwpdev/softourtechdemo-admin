@@ -1,57 +1,102 @@
-export default function Page(){
+// app/dashboard/page.tsx
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { prisma } from "@/lib/prisma";
+import { Card } from "@/components/ui/Card";
+
+function percent(a: number, b: number) {
+  if (b === 0) return "+0%";
+  const p = ((a - b) / b) * 100;
+  const s = p >= 0 ? "+" : "";
+  return `${s}${p.toFixed(1)}%`;
+}
+
+export default async function Dashboard() {
+  // ✅ hard auth-guard: unauthenticated users go to /login (no 404)
+  const session = await getServerSession();
+  if (!session) redirect("/login");
+
+  const now = new Date();
+  const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const twoWeeksAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+
+  // ✅ don’t let DB hiccups crash the route
+  let leads7 = 0, leadsPrev = 0, services = 0, projects = 0;
+  let statusData: Array<{ label: string; value: number }> = [];
+  let weekly: Array<{ label: string; value: number }> = [];
+
+  try {
+    [leads7, leadsPrev, services, projects] = await Promise.all([
+      prisma.lead.count({ where: { createdAt: { gte: weekAgo } } }),
+      prisma.lead.count({ where: { createdAt: { gte: twoWeeksAgo, lt: weekAgo } } }),
+      prisma.service.count({ where: { active: true } }),
+      prisma.project.count(),
+    ]);
+
+    const byStatus = await prisma.lead.groupBy({
+      by: ["status"],
+      _count: { status: true },
+    });
+    statusData = byStatus.map(b => ({ label: String(b.status), value: b._count.status }));
+
+    const since = new Date(now.getTime() - 56 * 24 * 60 * 60 * 1000);
+    const leads = await prisma.lead.findMany({
+      where: { createdAt: { gte: since } },
+      orderBy: { createdAt: "asc" },
+    });
+
+    const map = new Map<string, number>();
+    const fmt = (d: Date) => {
+      const year = d.getUTCFullYear();
+      const firstJan = new Date(Date.UTC(year, 0, 1));
+      const day = Math.floor((+d - +firstJan) / 86400000);
+      const week = Math.floor((day + firstJan.getUTCDay()) / 7);
+      return `${year}-W${String(week).padStart(2, "0")}`;
+    };
+    leads.forEach(l => {
+      const k = fmt(l.createdAt);
+      map.set(k, (map.get(k) ?? 0) + 1);
+    });
+    weekly = Array.from(map.entries()).map(([label, value]) => ({ label, value }));
+  } catch (e) {
+    console.error("dashboard prisma error", e);
+  }
+
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center gap-2">
-        <h1 className="text-2xl font-semibold">Dashboard</h1>
-        <div className="ml-auto flex gap-2">
-          <button className="btn btn-ghost">7d</button>
-          <button className="btn btn-ghost">30d</button>
-          <button className="btn btn-ghost">90d</button>
-          <button className="btn btn-ghost">Custom</button>
-        </div>
+    <div className="grid gap-4">
+      <div className="grid gap-4 md:grid-cols-4">
+        <Card>
+          <div className="text-sm text-[color:var(--text-muted)]">Leads (7d)</div>
+          <div className="text-3xl font-bold">{leads7}</div>
+          <div className="text-sm mt-1">{percent(leads7, leadsPrev)}</div>
+        </Card>
+        <Card>
+          <div className="text-sm text-[color:var(--text-muted)]">Active Services</div>
+          <div className="text-3xl font-bold">{services}</div>
+        </Card>
+        <Card>
+          <div className="text-sm text-[color:var(--text-muted)]">Projects</div>
+          <div className="text-3xl font-bold">{projects}</div>
+        </Card>
+        <Card>
+          <div className="text-sm text-[color:var(--text-muted)]">Conversion %</div>
+          {/* ASCII hyphen – avoids mojibake */}
+          <div className="text-3xl font-bold">-</div>
+        </Card>
       </div>
 
-      <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <div className="kpi"><div className="kpi-title">Leads Today</div><div className="kpi-value">128 <span className="kpi-delta bg-green-100 text-green-800">+12%</span></div></div>
-        <div className="kpi"><div className="kpi-title">Active Services</div><div className="kpi-value">6</div></div>
-        <div className="kpi"><div className="kpi-title">Conversion Rate</div><div className="kpi-value">8.4%</div></div>
-        <div className="kpi"><div className="kpi-title">Projects</div><div className="kpi-value">15</div></div>
-      </section>
+      <Card>
+        <div className="text-sm text-[color:var(--text-muted)] mb-2">Leads by status (sample)</div>
+        <pre className="text-xs overflow-auto">{JSON.stringify(statusData, null, 2)}</pre>
+      </Card>
 
-      <section className="grid gap-4 lg:grid-cols-3">
-        <div className="card lg:col-span-2">
-          <div className="mb-2 text-sm text-textmuted">Leads per week</div>
-          <div className="h-64 rounded bg-[color:var(--surface-2)]" />
-        </div>
-        <div className="card">
-          <div className="mb-2 text-sm text-textmuted">Leads by status</div>
-          <div className="h-64 rounded bg-[color:var(--surface-2)]" />
-        </div>
-      </section>
-
-      <section className="grid gap-4 lg:grid-cols-3">
-        <div className="card lg:col-span-2">
-          <div className="mb-3 text-sm text-textmuted">Activity</div>
-          <ul className="space-y-2 text-sm">
-            <li>• Ashraful updated Hero section (2h ago)</li>
-            <li>• New lead from John Doe (4h ago)</li>
-            <li>• Revalidated / and /work (6h ago)</li>
-          </ul>
-        </div>
-        <div className="card">
-          <div className="mb-3 text-sm text-textmuted">System Status</div>
-          <div className="space-y-2 text-sm">
-            <div>Email provider: ✅ Connected (Resend, last test 3h ago)</div>
-            <div>API uptime: 99.9%</div>
-            <div>Last backup: Yesterday</div>
-          </div>
-        </div>
-      </section>
-
-      <div className="flex gap-2">
-        <button className="btn btn-ghost">Export CSV</button>
-        <button className="btn btn-ghost">Export PNG</button>
-      </div>
+      <Card>
+        <div className="text-sm text-[color:var(--text-muted)] mb-2">Leads per week (sample)</div>
+        <pre className="text-xs overflow-auto">{JSON.stringify(weekly.slice(-10), null, 2)}</pre>
+      </Card>
     </div>
-  )
+  );
 }

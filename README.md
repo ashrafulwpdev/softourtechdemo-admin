@@ -1,27 +1,32 @@
-# Softourtech Admin — Premium Skeleton (Blueprint-Ready)
+# Softourtech Admin -- Full Build (MVP functional)
 
-This repo is a **clean replacement** starter aligned to your blueprint (desktop/tablet/mobile, dark/light, Blog-ready). It compiles to a premium shell you can extend with real data and server actions.
+**What works now**
+- Next.js 14 App Router + Tailwind tokens (dark/light)
+- Auth (NextAuth Credentials) via `ADMIN_EMAIL` / `ADMIN_PASSWORD`
+- Protected routes via `middleware.ts`
+- Prisma schema + CRUD pages:
+  - Services + Service Plans (Pricing)
+  - Projects
+  - Leads (status update)
+  - Blog Posts
+  - Site Settings
+- Dashboard with real DB data (counts + weekly aggregation, example JSON)
+- API: `/api/revalidate` (token) and `/api/email/test` (Resend)
+- Command palette (Cmd/Ctrl+K) for quick navigation
+- Mobile-friendly sidebar + logout + theme toggle
 
 ## Quick start
 ```bash
-pnpm i   # or npm i / yarn
+pnpm i # or npm/yarn
 cp .env.example .env
-# Set DATABASE_URL etc, then:
+# fill envs: DATABASE_URL, NEXTAUTH_SECRET, ADMIN_EMAIL, ADMIN_PASSWORD, REVALIDATE_TOKEN, RESEND_API_KEY (optional)
 npx prisma generate
-pnpm dev
+npm run db:push
+npm run dev
 ```
+Login at `/login` with the admin credentials.
 
-## Highlights
-- Next.js 14 (App Router), Tailwind tokens (AA), dark/light theme
-- Sidebar (collapsible), Topbar (search/new/notifications/avatar/logout), container width 1280
-- Dashboard KPIs + chart shells + activity/system status
-- Pages: Projects, Leads, Services, Pricing, Blog, Settings
-- Prisma schema for Admin + Blog (native) with extras (ServicePlan, LeadNote, AuditLog, SystemLog, Idempotency)
-- API stubs: revalidate, email test
-- Tokens: see `app/globals.css`, config in `tailwind.config.ts`
-
-## Next steps
-- Fill each module page with real UI per the spec (drawers, tables, kanban, editors).
-- Add Server Actions and REST routes where needed.
-- Wire revalidation and public site RO DB user.
-- Add ToastProvider, Command Palette, and form validation patterns.
+## Notes
+- Charts use JSON preview in Dashboard; wire Recharts as next step if needed.
+- Image uploads and Kanban drag-drop are not included in MVP; add Supabase/R2 and DnD Kit later.
+- Revalidation: call POST `/api/revalidate` with header `x-revalidate-token: REVALIDATE_TOKEN` and body `{ "paths": ["/","/pricing"] }`.
